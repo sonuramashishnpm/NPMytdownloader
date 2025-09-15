@@ -1,6 +1,5 @@
 import yt_dlp
 import streamlit as st
-from io import BytesIO
 
 st.title("NPM Video Downloader")
 
@@ -19,33 +18,35 @@ subs_lang = st.text_input("Subtitles Language (e.g., en):", "en") if download_su
 if st.button("Download"):
     if videolink:
         try:
-            # yt-dlp options for memory download
+            # yt-dlp options (NO local saving, only fetch link)
             ydl_opts = {
-                'format': format_map[quality],
-                'writesubtitles': download_subs,
-                'subtitleslangs': [subs_lang] if download_subs else None,
-                'noplaylist': False,
-                'outtmpl': '-',  # output to stdout
-                'quiet': True
+                "format": format_map[quality],
+                "writesubtitles": download_subs,
+                "subtitleslangs": [subs_lang] if download_subs else None,
+                "noplaylist": False,
+                "quiet": True
             }
 
-            # Download to BytesIO buffer
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                buffer = BytesIO()
                 info = ydl.extract_info(videolink, download=False)
-                final_name = video_name if video_name else info.get('title', 'video')
-                # Download to temp file
-                ydl_opts['outtmpl'] = final_name + '.%(ext)s'
-                ydl = yt_dlp.YoutubeDL(ydl_opts)
-                ydl.download([videolink])
+                final_name = video_name if video_name else info.get("title", "video")
+
+                # direct video/audio link
+                if "url" in info:
+                    direct_url = info["url"]
+                elif "entries" in info:  # playlist case -> first entry
+                    direct_url = info["entries"][0]["url"]
+                else:
+                    raise Exception("Could not extract video URL")
 
             st.success(f"✅ '{final_name}' ready to download!")
-            st.download_button(
-                label="⬇️ Download to Device",
-                data=open(final_name+'.mp4', 'rb').read(),
-                file_name=final_name+'.mp4',
-                mime='video/mp4'
+            st.markdown(
+                f"[⬇️ Click here to download **{final_name}**]({direct_url})",
+                unsafe_allow_html=True
             )
 
+            if download_subs:
+                st.info("🎬 Subtitles will auto-load in the video if available.")
+
         except Exception as e:
-            st.error(f"❌ Failed to download: {e}")
+            st.error(f"❌ Failed to get link: {e}")
