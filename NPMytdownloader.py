@@ -2,7 +2,7 @@ import yt_dlp
 import streamlit as st
 from io import BytesIO
 
-st.title("Ultimate YouTube Downloader 🟢")
+st.title("NPM Video Downloader")
 
 videolink = st.text_input("Enter YouTube Video Link:")
 video_name = st.text_input("Custom Video Name (optional):")
