@@ -24,7 +24,7 @@ if st.button("Download"):
                 'format': format_map[quality],
                 'writesubtitles': download_subs,
                 'subtitleslangs': [subs_lang] if download_subs else None,
-                'noplaylist': True,
+                'noplaylist': False,
                 'outtmpl': '-',  # output to stdout
                 'quiet': True
             }
