@@ -1,12 +1,8 @@
-!pip install yt-dlp
-
 import yt_dlp
 
-# YT video link (example)
-url = "https://youtu.be/-33oXx0TwHI?si=dGHZSaKEaDdZdSE0"
+url = input("Enter your youtube video link")
 
-# Output path Google Drive me (agar mounted ho)
-output_path = "/content/drive/MyDrive/agentic_ai_tutorial.mp4"
+output_path =input("Enter video path where to save")
 
 ydl_opts = {
     'outtmpl': output_path,
