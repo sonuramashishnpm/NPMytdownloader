@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>No-Ad YouTube Downloader</title>
+  <meta charset="UTF-8" />
+  <title>NPM YouTube Downloader</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
-  <h2>YouTube Downloader (No Ads, Local Save)</h2>
+  <div class="container">
+    <h1>NPM YouTube Downloader</h1>
+    <p class="subtitle">No ads. No tracking. Local download.</p>
 
-  <input type="text" id="url" placeholder="Paste YouTube URL" size="50">
-  <br><br>
-  <button onclick="download()">Download</button>
+    <div class="input-box">
+      <input
+        type="text"
+        id="url"
+        placeholder="Paste YouTube video link"
+        oninput="resetUI()"
+      />
+    </div>
 
-  <p id="status"></p>
+    <button id="downloadBtn" onclick="download()">
+      <span class="btn-text">Download</span>
+      <span class="loader"></span>
+    </button>
+
+    <div id="status" class="status hidden"></div>
+  </div>
 
   <script src="/static/script.js"></script>
 </body>
