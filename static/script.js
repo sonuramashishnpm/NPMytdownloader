@@ -1,20 +1,20 @@
 async function download() {
   const url = document.getElementById("url").value;
+  const btn = document.getElementById("downloadBtn");
   const status = document.getElementById("status");
 
   if (!url) {
-    status.innerText = "Please enter a URL";
+    showStatus("Please paste a YouTube link", "error");
     return;
   }
 
-  status.innerText = "Downloading... Please wait";
+  btn.classList.add("loading");
+  showStatus("Fetching video & preparing download…", "");
 
   try {
     const response = await fetch("/download", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url })
     });
 
@@ -25,15 +25,28 @@ async function download() {
 
     const blob = await response.blob();
     const a = document.createElement("a");
-    a.href = window.URL.createObjectURL(blob);
+    a.href = URL.createObjectURL(blob);
     a.download = "video.mp4";
     document.body.appendChild(a);
     a.click();
     a.remove();
 
-    status.innerText = "Download started ✔";
+    showStatus("Download started. Choose where to save.", "success");
 
   } catch (err) {
-    status.innerText = "Error: " + err.message;
+    showStatus(err.message, "error");
+  } finally {
+    btn.classList.remove("loading");
   }
+}
+
+function showStatus(message, type) {
+  const status = document.getElementById("status");
+  status.className = `status ${type}`;
+  status.innerText = message;
+  status.classList.remove("hidden");
+}
+
+function resetUI() {
+  document.getElementById("status").classList.add("hidden");
 }
